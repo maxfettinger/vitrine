@@ -1,0 +1,2 @@
+{{- /* One tab inside tabs: {{< tab "Label" >}}Markdown{{< /tab >}} */ -}}
+{{- .Parent.Store.Add "tabs" (slice (dict "label" (.Get 0) "content" (.InnerDeindent | .Page.RenderString (dict "display" "block")))) -}}

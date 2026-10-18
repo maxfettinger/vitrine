@@ -1,0 +1,5 @@
+{{ define "main" }}
+{{ partial "page-head.html" . }}
+{{ .Content }}
+{{ if not .FirstSection.IsHome }}{{ partial "page-foot.html" . }}{{ end }}
+{{ end }}

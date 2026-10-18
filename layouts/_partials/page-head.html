@@ -1,0 +1,10 @@
+{{- /* Top of a page: breadcrumbs (the sections above it), the title and the lead (front matter lead) */ -}}
+{{- with .Ancestors.Reverse }}
+  {{- if gt (len .) 1 }}
+<ol class="breadcrumbs">
+  {{- range after 1 . }}<li><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></li>{{ end }}
+</ol>
+  {{- end }}
+{{- end }}
+<h1>{{ .Title }}</h1>
+{{- with .Params.lead }}<p class="lead">{{ . | markdownify }}</p>{{ end }}

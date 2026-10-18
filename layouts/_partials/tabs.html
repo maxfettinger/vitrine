@@ -1,0 +1,16 @@
+{{- /* Tabs: a row of buttons and one panel shown (assets/js/vitrine.js: click, arrow keys). Context: dict with id
+       (unique on the page), tabs (a slice of dict label, content as HTML) and group (optional: tab groups with the
+       same group switch together, and the choice is remembered, like npm, pnpm and yarn across a page). */ -}}
+<div class="tabs" {{- with .group }} data-group="{{ . }}"{{ end }}>
+  <div class="tabs-list" role="tablist">
+    {{- range $i, $t := .tabs }}
+    <button type="button" role="tab" id="{{ $.id }}-tab-{{ $i }}" aria-controls="{{ $.id }}-panel-{{ $i }}"
+            aria-selected="{{ eq $i 0 }}" {{- if ne $i 0 }} tabindex="-1"{{ end }}>{{ $t.label }}</button>
+    {{- end }}
+  </div>
+  {{- range $i, $t := .tabs }}
+  <div class="tabs-panel" role="tabpanel" id="{{ $.id }}-panel-{{ $i }}" aria-labelledby="{{ $.id }}-tab-{{ $i }}" {{- if ne $i 0 }} hidden{{ end }}>
+    {{ $t.content }}
+  </div>
+  {{- end }}
+</div>

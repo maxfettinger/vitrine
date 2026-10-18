@@ -1,0 +1,7 @@
+{{- /* A Feather icon from assets/icons/ (MIT, see LICENSE there), inlined to take the text colour; hidden from screen
+       readers (the link or button around it has the label). {{ partial "icon.html" "github" }} */ -}}
+{{- with resources.Get (printf "icons/%s.svg" .) -}}
+  {{- replace .Content "<svg " (printf `<svg class="icon icon-%s" aria-hidden="true" ` $) 1 | safeHTML -}}
+{{- else -}}
+  {{- errorf "icon.html: assets/icons/%s.svg not found" . -}}
+{{- end -}}

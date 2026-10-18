@@ -1,0 +1,9 @@
+{{- /* The pages of the current tab (top-level section) in the sidebar's order: the section, its pages, each subsection
+       followed by its pages. For the sidebar's previous and next links. Returns a slice of pages. */ -}}
+{{- $root := .FirstSection }}
+{{- $order := slice $root }}
+{{- range $root.Pages }}
+  {{- $order = $order | append . }}
+  {{- if .IsSection }}{{ range .Pages }}{{ $order = $order | append . }}{{ end }}{{ end }}
+{{- end }}
+{{- return $order }}

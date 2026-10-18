@@ -1,0 +1,51 @@
+# Vitrine's example site: documentation for dialog-lightbox, a variation of the library's own site. Run it from the
+# theme's folder: hugo server -s exampleSite
+baseURL = "https://example.org/"
+locale = "en"
+title = "dialog-lightbox"
+theme = "vitrine"
+themesDir = "../.."
+disableKinds = ["taxonomy", "term", "rss"]
+
+# Three settings the theme needs but can't set itself (a theme's config only sets params and menus):
+# - .html files in page bundles are files, not pages, so an example's example.html can sit next to its page
+# - code colours as CSS classes, so the theme can colour them for light and dark mode
+# - "On this page" lists the h2 and h3 headings
+[contentTypes]
+  [contentTypes.'text/markdown']
+
+[markup.highlight]
+  noClasses = false
+[markup.tableOfContents]
+  startLevel = 2
+  endLevel = 3
+
+[menus]
+  [[menus.main]]
+    name = "Docs"
+    pageRef = "/docs"
+    weight = 10
+  [[menus.main]]
+    name = "Examples"
+    pageRef = "/examples"
+    weight = 20
+  [[menus.main]]
+    name = "npm"
+    url = "https://www.npmjs.com/package/dialog-lightbox"
+    weight = 30
+
+[params]
+  description = "A small, typed lightbox on the native dialog element. Swipe, zoom and video for the photos you link to."
+  version = "0.3.1"
+  repo = "https://github.com/maxfettinger/dialog-lightbox"
+  editPath = "https://github.com/maxfettinger/vitrine/edit/main/exampleSite/content/"
+  footer = "MIT · The photos and clips are generated gradients"
+  # The library's CSS for the examples, from jsDelivr
+  stylesheets = ["https://cdn.jsdelivr.net/npm/dialog-lightbox@0.3.1/dist/dialog-lightbox.css"]
+
+  [params.mode]
+    default = "auto"
+
+  # The examples' scripts import "dialog-lightbox" as readers would after npm install; this map sends it to jsDelivr
+  [params.importmap]
+    dialog-lightbox = "https://cdn.jsdelivr.net/npm/dialog-lightbox@0.3.1/dist/dialog-lightbox.js"

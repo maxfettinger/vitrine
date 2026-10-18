@@ -1,0 +1,36 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} · {{ site.Title }}{{ end }}</title>
+<meta name="description" content="{{ .Description | default .Params.lead | default site.Params.description | plainify }}">
+<link rel="canonical" href="{{ .Permalink }}">
+{{- with site.Params.favicon }}<link rel="icon" href="{{ . | relURL }}">{{ end }}
+{{ partial "opengraph.html" . }}
+{{ partial "twitter_cards.html" . }}
+{{- /* Light or dark before the first paint: the visitor's choice from the switch, else params.mode.default ("auto":
+       the system's). Inline, so the page doesn't flash. */}}
+<script>
+  try {
+    const stored = localStorage.getItem("theme");
+    const fallback = {{ site.Params.mode.default | default "auto" }};
+    const system = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    if ((stored || (fallback === "auto" ? system : fallback)) === "dark") document.documentElement.dataset.theme = "dark";
+  } catch {}
+</script>
+{{- /* The import map (params.importmap) comes before any module, so examples import "my-lib" as from npm */}}
+{{- with site.Params.importmap }}
+  {{- $imports := dict }}
+  {{- range $name, $url := . }}
+    {{- $imports = merge $imports (dict $name (cond (strings.HasPrefix $url "/") (strings.TrimPrefix "/" $url | relURL) $url)) }}
+  {{- end }}
+{{- /* As one string: Go templates don't treat type="importmap" as JavaScript and would escape the JSON */}}
+{{ printf `<script type="importmap">%s</script>` (dict "imports" $imports | jsonify) | safeHTML }}
+{{- end }}
+{{- range site.Params.stylesheets }}
+<link rel="stylesheet" href="{{ cond (strings.HasPrefix . "/") (strings.TrimPrefix "/" . | relURL) . }}">
+{{- end }}
+{{- with resources.Get "css/vitrine.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous">
+{{- end }}
+{{- with resources.Get "js/vitrine.js" | js.Build (dict "minify" true) | fingerprint }}
+<script type="module" src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous"></script>
+{{- end }}

@@ -1,0 +1,56 @@
+{{- /* Example: runs a small example on the page and shows its code, from one folder next to the page's index.md:
+
+         {{< example "captions" >}}                            the folder captions/ beside index.md
+         {{< example name="captions" title="Captions" >}}      the same, with a title in the frame
+         {{< example name="dialog" code="false" >}}            runs it, no code shown
+         {{< example name="zoom" run="false" >}}               only the code
+         {{< example name="dialog" frame="false" >}}           runs it bare: no frame, no code (shared parts)
+
+       An example several pages share (a dialog, a header) can live in the site's assets/examples/<name>/ instead;
+       the page's own folder comes first.
+
+       The folder holds example.html, and optionally style.css and script.js. The page shows exactly these files:
+       - example.html goes into the page as it is; links and sources starting with "/" get the site's base path, so
+         the example can write paths as on its own site
+       - style.css is wrapped in @scope, so it styles this example and nothing else on the page
+       - script.js runs as a module; with the site's import map (params.importmap) it imports "your-lib" as readers
+         would after npm install, so the code shown is the code that runs. */ -}}
+{{- $name := cond .IsNamedParams (.Get "name") (.Get 0) }}
+{{- $file := dict }}
+{{- range slice "example.html" "style.css" "script.js" }}
+  {{- with or ($.Page.Resources.Get (printf "%s/%s" $name .)) (resources.Get (printf "examples/%s/%s" $name .)) }}
+    {{- $file = merge $file (dict (index (split (path.Base .Name) ".") 1) .) }}
+  {{- end }}
+{{- end }}
+{{- $html := $file.html }}
+{{- $css := $file.css }}
+{{- $js := $file.js }}
+{{- $frame := ne (.Get "frame") "false" }}
+{{- $run := ne (.Get "run") "false" }}
+{{- $code := and $frame (ne (.Get "code") "false") }}
+{{- $id := printf "example-%s" (anchorize $name) }}
+{{- if not $html }}
+  {{- errorf "%s: example %q: no %s/example.html next to the page or in assets/examples/" .Page.RelPermalink $name $name }}
+{{- end }}
+{{- if $frame }}<figure class="example" id="{{ $id }}">{{ end }}
+  {{- if $run }}
+  {{- if $frame }}<div class="example-head"><span>Example</span><span>{{ .Get "title" | default $name }}</span></div>{{ end }}
+  <div class="{{ if $frame }}example-run{{ else }}example-bare{{ end }}" data-example="{{ $name }}">
+    {{ replaceRE `(\s(?:src|href|poster)=")/([^/])` (printf "${1}%s${2}" site.Home.RelPermalink) $html.Content | safeHTML }}
+  </div>
+  {{- with $css }}
+  <style>@scope ([data-example="{{ $name }}"]) {
+{{ .Content | safeCSS }}
+}</style>
+  {{- end }}
+  {{- with $js }}
+  <script type="module">{{ .Content | safeJS }}</script>
+  {{- end }}
+  {{- end }}
+  {{- if $code }}
+    {{- $files := slice (dict "label" "example.html" "content" (partial "code.html" (dict "code" $html.Content "lang" "html" "file" "example.html"))) }}
+    {{- with $css }}{{ $files = $files | append (dict "label" "style.css" "content" (partial "code.html" (dict "code" .Content "lang" "css" "file" "style.css"))) }}{{ end }}
+    {{- with $js }}{{ $files = $files | append (dict "label" "script.js" "content" (partial "code.html" (dict "code" .Content "lang" "js" "file" "script.js"))) }}{{ end }}
+  {{ partial "tabs.html" (dict "id" $id "tabs" $files) }}
+  {{- end }}
+{{- if $frame }}</figure>{{ end }}

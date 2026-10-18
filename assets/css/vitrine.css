@@ -1,0 +1,920 @@
+/*
+ * Vitrine: light, plain and a bit technical. System fonts with monospace for headings, labels and code, thin rules,
+ * one cobalt accent; the same in a dark version. The page: a header bar with the site's tabs, then the section's
+ * navigation on the left, the text in the middle and "On this page" on the right. The header has the same width on
+ * every page and the page always reserves room for the scrollbar, so nothing moves between pages with and without
+ * sidebars. Text colours pass WCAG AA (4.5:1) on page and code backgrounds in both modes.
+ */
+@layer reset, base, layout, components, syntax;
+
+@layer base {
+    :root {
+        color-scheme: light;
+        --bg: #ffffff;
+        --bg-soft: #f7f8fa;          /* code, examples' frames, the header */
+        --text: #15171c;
+        --muted: #5c636e;
+        --line: #e3e6eb;
+        --accent: #2443d6;
+        --accent-strong: #1a32a6;
+        --accent-soft: #eef1fd;
+        --note: #2443d6;
+        --warn: #a15c00;
+        --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+        --gutter: clamp(1rem, 0.6rem + 1.6vw, 2rem);
+        --layout: 88rem;             /* the header and the three columns */
+        --sidebar: 15rem;
+        --toc: 13rem;
+        --text-width: 46rem;
+        --header: 3.5rem;
+    }
+
+    :root[data-theme="dark"] {
+        color-scheme: dark;
+        --bg: #0f1115;
+        --bg-soft: #161a22;
+        --text: #e6e8ec;
+        --muted: #9aa2ae;
+        --line: #262b35;
+        --accent: #8ca2ff;
+        --accent-strong: #b3c1ff;
+        --accent-soft: #1b2238;
+        --note: #8ca2ff;
+        --warn: #f0b45a;
+    }
+}
+
+@layer reset {
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    /* Room for the scrollbar on every page, so the layout doesn't shift between short and long pages */
+    html {
+        scrollbar-gutter: stable;
+        -webkit-text-size-adjust: 100%;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        html {
+            scroll-behavior: smooth;
+        }
+    }
+
+    body {
+        margin: 0;
+    }
+
+    img,
+    video,
+    svg {
+        display: block;
+        max-width: 100%;
+    }
+
+    button {
+        font: inherit;
+        cursor: pointer;
+    }
+}
+
+@layer base {
+    body {
+        background: var(--bg);
+        color: var(--text);
+        font: 1rem / 1.65 var(--sans);
+    }
+
+    a {
+        color: var(--accent);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.2em;
+    }
+
+    a:hover {
+        color: var(--accent-strong);
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+        font-family: var(--mono);
+        font-weight: 700;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+        scroll-margin-top: calc(var(--header) + 1rem);
+    }
+
+    h1 {
+        margin-block: 2rem 0.75rem;
+        font-size: clamp(1.8rem, 1.4rem + 1.8vw, 2.4rem);
+    }
+
+    /* Each chapter starts at a rule */
+    h2 {
+        margin-block: 3rem 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--line);
+        font-size: 1.25rem;
+    }
+
+    h3 {
+        margin-block: 2rem 0.5rem;
+        font-size: 1rem;
+    }
+
+    code,
+    pre,
+    kbd {
+        font-family: var(--mono);
+    }
+
+    :not(pre) > code {
+        padding: 0.1em 0.3em;
+        border: 1px solid var(--line);
+        border-radius: 0.25rem;
+        background: var(--bg-soft);
+        font-size: 0.86em;
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+        width: 100%;
+        margin-block: 1rem;
+        border-collapse: collapse;
+        font-size: 0.92rem;
+    }
+
+    th,
+    td {
+        padding: 0.5rem 1rem 0.5rem 0;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+        vertical-align: top;
+    }
+
+    th {
+        color: var(--muted);
+        font: 600 0.75rem / 1.4 var(--mono);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    blockquote {
+        margin-inline: 0;
+        padding-left: 1rem;
+        border-left: 2px solid var(--line);
+        color: var(--muted);
+    }
+
+    .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+
+    .icon {
+        width: 1.1em;
+        height: 1.1em;
+        flex: none;
+    }
+}
+
+@layer layout {
+    .skip-link {
+        position: absolute;
+        z-index: 3;
+        top: 0.5rem;
+        left: 0.5rem;
+        padding: 0.4rem 0.8rem;
+        background: var(--bg);
+        translate: 0 -200%;
+    }
+
+    .skip-link:focus {
+        translate: none;
+    }
+
+    /* The header: a bar across the window, its content as wide as the three columns on every page */
+    .header {
+        position: sticky;
+        z-index: 2;
+        top: 0;
+        border-bottom: 1px solid var(--line);
+        background: color-mix(in srgb, var(--bg) 88%, transparent);
+        backdrop-filter: blur(8px);
+    }
+
+    .header-inner {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem 1.25rem;
+        width: min(100%, var(--layout));
+        min-height: var(--header);
+        margin-inline: auto;
+        padding-inline: var(--gutter);
+        font: 0.9rem / 1.4 var(--mono);
+    }
+
+    /* The page: three columns on wide screens, the side ones sticky below the header */
+    .layout {
+        display: grid;
+        grid-template-columns: var(--sidebar) minmax(0, 1fr) var(--toc);
+        column-gap: 3rem;
+        width: min(100%, var(--layout));
+        margin-inline: auto;
+        padding-inline: var(--gutter);
+    }
+
+    .layout > .content {
+        grid-column: 2;
+        max-width: var(--text-width);
+        padding-block: 0.5rem 4rem;
+    }
+
+    /* Pages without a sidebar (the start page, 404): the text in the middle of the same frame */
+    .layout.plain > .content {
+        grid-column: 1 / -1;
+        width: min(100%, 60rem);
+        max-width: none;
+        margin-inline: auto;
+    }
+
+    .sidebar,
+    .toc {
+        position: sticky;
+        top: var(--header);
+        align-self: start;
+        max-height: calc(100dvh - var(--header));
+        overflow-y: auto;
+        padding-block: 2rem;
+        font: 0.85rem / 1.5 var(--mono);
+    }
+
+    .sidebar {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .toc {
+        grid-column: 3;
+        grid-row: 1;
+    }
+
+    /* Medium screens: no "On this page" column */
+    @media (max-width: 72rem) {
+        .layout {
+            grid-template-columns: var(--sidebar) minmax(0, 1fr);
+        }
+
+        .toc {
+            display: none;
+        }
+    }
+
+    /* Small screens: one column, the navigation behind the menu button in the header */
+    @media (max-width: 48rem) {
+        .layout {
+            display: block;
+        }
+
+        .sidebar {
+            position: fixed;
+            z-index: 2;
+            inset: var(--header) 0 auto;
+            height: calc(100dvh - var(--header));
+            max-height: none;
+            padding: 1.5rem var(--gutter);
+            background: var(--bg);
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.15s, visibility 0.15s;
+        }
+
+        .sidebar[data-open] {
+            visibility: visible;
+            opacity: 1;
+        }
+    }
+
+    .footer {
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font: 0.8rem / 1.6 var(--mono);
+    }
+
+    .footer-inner {
+        width: min(100%, var(--layout));
+        margin-inline: auto;
+        padding: 1.5rem var(--gutter);
+    }
+
+    .footer a {
+        color: inherit;
+    }
+}
+
+@layer components {
+    /* Header: the name and version, the tabs, then the switches */
+    .brand {
+        color: var(--text);
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .version {
+        color: var(--muted);
+        font-size: 0.8em;
+    }
+
+    .tabs-nav {
+        display: flex;
+        gap: 1.25rem;
+        min-width: 0;
+        margin-left: 1rem;
+        overflow-x: auto;
+    }
+
+    .tabs-nav a {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        min-height: var(--header);
+        border-bottom: 2px solid transparent;
+        color: var(--muted);
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .tabs-nav a:hover {
+        color: var(--text);
+    }
+
+    .tabs-nav a[aria-current] {
+        border-bottom-color: var(--accent);
+        color: var(--text);
+    }
+
+    .tabs-nav .icon {
+        width: 0.8em;
+    }
+
+    .header-tools {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        margin-left: auto;
+    }
+
+    .icon-button {
+        display: grid;
+        place-items: center;
+        width: 2.25rem;
+        height: 2.25rem;
+        padding: 0;
+        border: 0;
+        border-radius: 0.4rem;
+        background: none;
+        color: var(--muted);
+    }
+
+    .icon-button:hover {
+        background: var(--bg-soft);
+        color: var(--text);
+    }
+
+    :root[data-theme="dark"] .theme-toggle .icon-moon,
+    :root:not([data-theme="dark"]) .theme-toggle .icon-sun,
+    .menu-toggle {
+        display: none;
+    }
+
+    /* Small screens: the name on one line, no version, the tabs scroll sideways between name and buttons */
+    @media (max-width: 48rem) {
+        .menu-toggle {
+            display: grid;
+        }
+
+        .header-inner {
+            gap: 0.75rem;
+        }
+
+        .brand {
+            white-space: nowrap;
+        }
+
+        .version {
+            display: none;
+        }
+
+        .tabs-nav {
+            flex: 1;
+            gap: 1rem;
+            margin-left: 0;
+            mask: linear-gradient(to right, #000 calc(100% - 1.5rem), transparent);
+            scrollbar-width: none;
+        }
+    }
+
+    /* Sidebar: the section's pages, its subsections as groups that open */
+    .sidebar ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .sidebar-title {
+        margin: 0 0 0.75rem;
+        color: var(--muted);
+        font: 600 0.72rem / 1.4 var(--mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    .sidebar a,
+    .sidebar summary {
+        display: block;
+        padding: 0.3rem 0.6rem;
+        border-radius: 0.3rem;
+        color: var(--muted);
+        text-decoration: none;
+    }
+
+    .sidebar a:hover,
+    .sidebar summary:hover {
+        background: var(--bg-soft);
+        color: var(--text);
+    }
+
+    .sidebar a[aria-current="page"] {
+        background: var(--accent-soft);
+        color: var(--accent-strong);
+        font-weight: 600;
+    }
+
+    .sidebar summary {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--text);
+        cursor: pointer;
+        list-style: none;
+    }
+
+    .sidebar summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .sidebar summary .icon {
+        width: 0.9em;
+        transition: rotate 0.15s;
+    }
+
+    .sidebar details[open] > summary .icon {
+        rotate: 90deg;
+    }
+
+    .sidebar details ul {
+        margin: 0.15rem 0 0.4rem 0.6rem;
+        padding-left: 0.4rem;
+        border-left: 1px solid var(--line);
+    }
+
+    /* On this page: the chapter being read is marked while scrolling */
+    .toc-title {
+        margin: 0 0 0.75rem;
+        color: var(--muted);
+        font: 600 0.72rem / 1.4 var(--mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    .toc ul {
+        margin: 0;
+        padding: 0;
+        border-left: 1px solid var(--line);
+        list-style: none;
+    }
+
+    .toc ul ul {
+        border: 0;
+    }
+
+    .toc a {
+        display: block;
+        margin-left: -1px;
+        padding: 0.25rem 0 0.25rem 0.9rem;
+        border-left: 2px solid transparent;
+        color: var(--muted);
+        text-decoration: none;
+    }
+
+    .toc ul ul a {
+        padding-left: 1.6rem;
+    }
+
+    .toc a:hover {
+        color: var(--text);
+    }
+
+    .toc a[aria-current] {
+        border-left-color: var(--accent);
+        color: var(--text);
+    }
+
+    /* Page head: breadcrumbs, title, lead */
+    .breadcrumbs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin: 2rem 0 0;
+        padding: 0;
+        list-style: none;
+        color: var(--muted);
+        font: 0.8rem / 1.4 var(--mono);
+    }
+
+    .breadcrumbs li + li::before {
+        content: "/ ";
+    }
+
+    .breadcrumbs a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .breadcrumbs + h1 {
+        margin-top: 0.5rem;
+    }
+
+    .lead {
+        max-width: 42rem;
+        color: var(--muted);
+        font-size: 1.15rem;
+    }
+
+    /* Headings' # links, shown on hover */
+    .heading-anchor {
+        margin-left: 0.4rem;
+        color: var(--muted);
+        text-decoration: none;
+        opacity: 0;
+    }
+
+    :is(h2, h3, h4):hover .heading-anchor,
+    .heading-anchor:focus-visible {
+        opacity: 1;
+    }
+
+    /* Code blocks: the file name or language and a copy button above the code */
+    .code {
+        margin: 1rem 0;
+        border: 1px solid var(--line);
+        border-radius: 0.4rem;
+        background: var(--bg-soft);
+        overflow: hidden;
+    }
+
+    .code-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.3rem 0.4rem 0.3rem 0.9rem;
+        border-bottom: 1px solid var(--line);
+        background: var(--bg);
+        color: var(--muted);
+        font: 0.78rem / 1.6 var(--mono);
+    }
+
+    .code-copy {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.15rem 0.55rem;
+        border: 1px solid var(--line);
+        border-radius: 0.25rem;
+        background: var(--bg);
+        color: var(--muted);
+        font: inherit;
+    }
+
+    .code-copy:hover {
+        border-color: var(--muted);
+        color: var(--text);
+    }
+
+    .code pre {
+        overflow-x: auto;
+        margin: 0;
+        padding: 0.9rem 1rem;
+        background: none !important;
+        color: var(--text);
+        font-size: 0.84rem;
+        line-height: 1.6;
+        tab-size: 2;
+    }
+
+    /* Tabs (tabs shortcode, and an example's files): a row of buttons, one panel shown */
+    .tabs {
+        margin: 1rem 0;
+    }
+
+    .tabs-list {
+        display: flex;
+        gap: 0.25rem;
+        overflow-x: auto;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .tabs-list button {
+        margin-bottom: -1px;
+        padding: 0.4rem 0.8rem;
+        border: 0;
+        border-bottom: 2px solid transparent;
+        background: none;
+        color: var(--muted);
+        font: 0.82rem / 1.4 var(--mono);
+        white-space: nowrap;
+    }
+
+    .tabs-list button:hover {
+        color: var(--text);
+    }
+
+    .tabs-list button[aria-selected="true"] {
+        border-bottom-color: var(--accent);
+        color: var(--text);
+    }
+
+    .tabs-panel > .code:first-child {
+        margin-top: 0;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        border-top: 0;
+    }
+
+    .tabs-panel > :first-child:not(.code) {
+        margin-top: 1rem;
+    }
+
+    /* Examples: the running example in a frame, its files in tabs below */
+    .example {
+        margin: 1.5rem 0;
+        border: 1px solid var(--line);
+        border-radius: 0.5rem;
+        overflow: hidden;
+    }
+
+    .example-head {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.35rem 0.9rem;
+        border-bottom: 1px solid var(--line);
+        background: var(--bg-soft);
+        color: var(--muted);
+        font: 600 0.72rem / 1.6 var(--mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    .example-run {
+        padding: 1.25rem;
+    }
+
+    .example .tabs {
+        margin: 0;
+        border-top: 1px solid var(--line);
+    }
+
+    .example .tabs-list {
+        padding-inline: 0.5rem;
+        background: var(--bg-soft);
+    }
+
+    .example .code {
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+    }
+
+    .example .code-head {
+        display: none;
+    }
+
+    .example .tabs-panel {
+        position: relative;
+    }
+
+    .example .tabs-panel .code-copy {
+        position: absolute;
+        z-index: 1;
+        top: 0.5rem;
+        right: 0.5rem;
+    }
+
+    /* Callouts: a note or a warning beside the text */
+    .callout {
+        display: flex;
+        gap: 0.75rem;
+        margin: 1.25rem 0;
+        padding: 0.8rem 1rem;
+        border: 1px solid var(--line);
+        border-left: 3px solid var(--note);
+        border-radius: 0.4rem;
+        background: var(--bg-soft);
+    }
+
+    .callout .icon {
+        margin-top: 0.25rem;
+        color: var(--note);
+    }
+
+    .callout-warning {
+        border-left-color: var(--warn);
+    }
+
+    .callout-warning .icon {
+        color: var(--warn);
+    }
+
+    .callout > div > :first-child {
+        margin-top: 0;
+    }
+
+    .callout > div > :last-child {
+        margin-bottom: 0;
+    }
+
+    /* Under each page: edit link, previous and next */
+    .page-foot {
+        display: grid;
+        gap: 1.5rem;
+        margin-top: 4rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--line);
+        font: 0.85rem / 1.5 var(--mono);
+    }
+
+    .edit-link {
+        color: var(--muted);
+    }
+
+    .pager {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .pager a {
+        display: grid;
+        gap: 0.2rem;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--line);
+        border-radius: 0.4rem;
+        color: var(--text);
+        text-decoration: none;
+    }
+
+    .pager a:hover {
+        border-color: var(--accent);
+    }
+
+    .pager small {
+        color: var(--muted);
+    }
+
+    .pager .next {
+        margin-left: auto;
+        text-align: right;
+    }
+
+    /* The start page: a hero with name, lead, facts and the install command */
+    .hero h1 {
+        margin-top: 3.5rem;
+        font-size: clamp(2.2rem, 1.6rem + 3vw, 3.6rem);
+    }
+
+    .facts {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin: 1.25rem 0;
+        padding: 0;
+        list-style: none;
+        font: 0.8rem / 1 var(--mono);
+    }
+
+    .facts li {
+        padding: 0.4rem 0.6rem;
+        border: 1px solid var(--line);
+        border-radius: 0.25rem;
+    }
+
+    .hero .code {
+        max-width: 26rem;
+    }
+
+    .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 1.5rem 0;
+    }
+
+    .actions a {
+        padding: 0.55rem 1rem;
+        border: 1px solid var(--line);
+        border-radius: 0.4rem;
+        font: 600 0.9rem / 1.4 var(--mono);
+        text-decoration: none;
+    }
+
+    .actions a:first-child {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: var(--bg);
+    }
+
+    .not-found {
+        padding-block: 4rem;
+        text-align: center;
+    }
+}
+
+/* Syntax colours: tags and selectors blue, attributes and keywords purple, values green, comments grey; at least
+   4.5:1 on the code background in both modes */
+@layer syntax {
+    .chroma :is(.nt, .nc, .nd, .nf, .fm) {
+        color: #1d47c9;
+    }
+
+    .chroma :is(.na, .k, .kd, .kn, .kr, .kt, .kp, .ow) {
+        color: #8027a8;
+    }
+
+    .chroma :is(.s, .s1, .s2, .sb, .sa, .sd, .se, .si, .dl, .m, .mi, .mf, .mh, .kc) {
+        color: #0b6e3a;
+    }
+
+    .chroma :is(.c, .c1, .cm, .ch, .cs) {
+        color: #646b75;
+        font-style: italic;
+    }
+
+    .chroma :is(.o, .p) {
+        color: #4a505a;
+    }
+
+    :root[data-theme="dark"] .chroma :is(.nt, .nc, .nd, .nf, .fm) {
+        color: #8fb0ff;
+    }
+
+    :root[data-theme="dark"] .chroma :is(.na, .k, .kd, .kn, .kr, .kt, .kp, .ow) {
+        color: #d6a2f2;
+    }
+
+    :root[data-theme="dark"] .chroma :is(.s, .s1, .s2, .sb, .sa, .sd, .se, .si, .dl, .m, .mi, .mf, .mh, .kc) {
+        color: #7fd3a1;
+    }
+
+    :root[data-theme="dark"] .chroma :is(.c, .c1, .cm, .ch, .cs) {
+        color: #8d95a1;
+    }
+
+    :root[data-theme="dark"] .chroma :is(.o, .p) {
+        color: #b4bac4;
+    }
+}
+
+/* A section's list of its pages */
+@layer components {
+    .section-list {
+        padding-left: 1.1rem;
+    }
+
+    .section-list li {
+        margin-block: 0.4rem;
+        color: var(--muted);
+    }
+}
+
+/* An example run bare (frame="false"): its markup takes no room of its own */
+@layer components {
+    .example-bare {
+        display: contents;
+    }
+}

@@ -1,0 +1,18 @@
+{{- /* Under a page: "Edit this page" (params.editPath + the page's file), and the previous and next page in the
+       sidebar's order (order.html) */ -}}
+{{- $order := partial "order.html" . }}
+{{- $i := -1 }}
+{{- range $index, $p := $order }}{{ if eq $p $ }}{{ $i = $index }}{{ end }}{{ end }}
+<footer class="page-foot">
+  {{- with site.Params.editPath }}{{ with $.File }}
+  <a class="edit-link" href="{{ site.Params.editPath }}{{ .Path }}" target="_blank" rel="noopener">Edit this page<span class="visually-hidden"> (opens in a new tab)</span></a>
+  {{- end }}{{ end }}
+  <nav class="pager" aria-label="Previous and next page">
+    {{- if gt $i 0 }}{{ with index $order (sub $i 1) }}
+    <a class="prev" href="{{ .RelPermalink }}"><small>Previous</small>{{ .LinkTitle }}</a>
+    {{- end }}{{ end }}
+    {{- if and (ge $i 0) (lt (add $i 1) (len $order)) }}{{ with index $order (add $i 1) }}
+    <a class="next" href="{{ .RelPermalink }}"><small>Next</small>{{ .LinkTitle }}</a>
+    {{- end }}{{ end }}
+  </nav>
+</footer>

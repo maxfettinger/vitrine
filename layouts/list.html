@@ -1,0 +1,14 @@
+{{- /* A section's own page: its text, then its pages and subsections with their summaries */ -}}
+{{ define "main" }}
+{{ partial "page-head.html" . }}
+{{ .Content }}
+{{- with .Pages }}
+<h2 id="in-this-section">In this section</h2>
+<ul class="section-list">
+  {{- range . }}
+  <li><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ with .Params.lead | default .Summary }} · {{ . | plainify | truncate 140 }}{{ end }}</li>
+  {{- end }}
+</ul>
+{{- end }}
+{{ if not .FirstSection.IsHome }}{{ partial "page-foot.html" . }}{{ end }}
+{{ end }}

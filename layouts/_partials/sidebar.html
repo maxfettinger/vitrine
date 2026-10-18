@@ -1,0 +1,27 @@
+{{- /* The navigation of the current tab, two levels deep, like Hextra's: the tab's own page and pages, each subsection
+       as a group that opens (open where the current page is). In Hugo's default order: by weight. */ -}}
+{{- $page := . }}
+{{- $root := .FirstSection }}
+<nav class="sidebar" id="sidebar" aria-label="{{ $root.LinkTitle }}">
+  <p class="sidebar-title">{{ $root.LinkTitle }}</p>
+  <ul>
+    <li><a href="{{ $root.RelPermalink }}" {{- if eq $root $page }} aria-current="page"{{ end }}>Overview</a></li>
+    {{- range $root.Pages }}
+    <li>
+      {{- if .IsSection }}
+      <details {{- if or (eq . $page) (.IsAncestor $page) }} open{{ end }}>
+        <summary>{{ .LinkTitle }}{{ partial "icon.html" "chevron-right" }}</summary>
+        <ul>
+          <li><a href="{{ .RelPermalink }}" {{- if eq . $page }} aria-current="page"{{ end }}>Overview</a></li>
+          {{- range .Pages }}
+          <li><a href="{{ .RelPermalink }}" {{- if eq . $page }} aria-current="page"{{ end }}>{{ .LinkTitle }}</a></li>
+          {{- end }}
+        </ul>
+      </details>
+      {{- else }}
+      <a href="{{ .RelPermalink }}" {{- if eq . $page }} aria-current="page"{{ end }}>{{ .LinkTitle }}</a>
+      {{- end }}
+    </li>
+    {{- end }}
+  </ul>
+</nav>

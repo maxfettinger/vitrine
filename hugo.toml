@@ -1,0 +1,22 @@
+# Vitrine: the theme's defaults. A site that uses the theme overrides these in its own hugo.toml (exampleSite/).
+# In TOML a key after a [table] header belongs to that table: plain keys first, tables after.
+
+[module.hugoVersion]
+  min = "0.146.0"  # the template names: _partials, _shortcodes, _markup
+
+[params]
+  description = ""     # for search engines and link previews
+  version = ""         # shown next to the name in the header, e.g. "0.3.1"
+  repo = ""            # the repository: an icon in the header
+  editPath = ""        # e.g. "https://github.com/me/lib/edit/main/docs/content/": "Edit this page" under each page
+  stylesheets = []     # extra stylesheets in every page's head, e.g. the library's own CSS from a CDN
+  favicon = "favicon.svg"  # a file in static/ (the theme has a default)
+  footer = ""          # a line before "Built with", Markdown
+
+  # Light and dark: "light", "dark" or "auto" (the visitor's system) until the visitor uses the switch
+  [params.mode]
+    default = "auto"
+
+  # Import map for the examples' scripts (and yours): a bare name like "my-lib" to a URL, so example code imports
+  # exactly as readers would after npm install, and runs as shown. Paths starting with "/" get the site's base path.
+  [params.importmap]

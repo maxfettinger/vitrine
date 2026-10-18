@@ -1,0 +1,10 @@
+{{- /* Tabs around Markdown, each tab a tab shortcode:
+
+         {{< tabs group="package-manager" >}}
+         {{< tab "npm" >}} ```sh … ``` {{< /tab >}}
+         {{< tab "pnpm" >}} … {{< /tab >}}
+         {{< /tabs >}}
+
+       group (optional): tab groups with the same group switch together and remember the choice. */ -}}
+{{- $_ := .Inner }}
+{{ partial "tabs.html" (dict "id" (printf "tabs-%d" .Ordinal) "tabs" (.Store.Get "tabs") "group" (.Get "group")) }}

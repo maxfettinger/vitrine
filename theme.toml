@@ -1,0 +1,12 @@
+name = "Vitrine"
+license = "MIT"
+licenselink = "https://github.com/maxfettinger/vitrine/blob/main/LICENSE"
+description = "A documentation theme for small libraries: tabs, two-level navigation, \"On this page\", light and dark, and examples that run on the page next to their code."
+homepage = "https://github.com/maxfettinger/vitrine"
+tags = ["docs", "documentation", "dark mode", "minimal", "light"]
+features = ["live examples with their code", "import map: example code imports as from npm", "tabs that remember the choice", "two-level sidebar", "On this page", "light and dark", "copy buttons", "no JavaScript framework"]
+min_version = "0.146.0"
+
+[author]
+  name = "Maximilian Fettinger"
+  homepage = "https://maxfettinger.com"

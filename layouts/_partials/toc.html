@@ -1,0 +1,8 @@
+{{- /* On this page: the page's h2 and h3 headings (Hugo's table of contents), the one being read marked while
+       scrolling (assets/js/vitrine.js). Left out on pages without headings. */ -}}
+<aside class="toc">
+  {{- if .Fragments.Headings }}
+  <p class="toc-title">On this page</p>
+  {{ .TableOfContents }}
+  {{- end }}
+</aside>

@@ -1,0 +1,6 @@
+{{- /* A note or a warning beside the text: {{< callout >}}Markdown{{< /callout >}}, {{< callout "warning" >}}…{{< /callout >}} */ -}}
+{{- $type := .Get 0 | default "note" }}
+<div class="callout callout-{{ $type }}" role="note">
+  {{ partial "icon.html" (cond (eq $type "warning") "alert-triangle" "info") }}
+  <div>{{ .InnerDeindent | .Page.RenderString (dict "display" "block") }}</div>
+</div>

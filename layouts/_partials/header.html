@@ -1,0 +1,30 @@
+{{- /* The header: the name and version, the site's tabs (the main menu; the current section's tab is marked), the
+       repository, the light/dark switch, and on small screens the button for the section's navigation */ -}}
+<header class="header">
+  <div class="header-inner">
+    <a class="brand" href="{{ site.Home.RelPermalink }}">{{ site.Title }}</a>
+    {{- with site.Params.version }}<span class="version">v{{ . }}</span>{{ end }}
+    <nav class="tabs-nav" aria-label="Main">
+      {{- range site.Menus.main }}
+        {{- $external := strings.HasPrefix .URL "http" }}
+        {{- $current := or ($.IsMenuCurrent "main" .) ($.HasMenuCurrent "main" .) }}
+      <a href="{{ .URL }}" {{- if $current }} aria-current="page"{{ end }} {{- if $external }} target="_blank" rel="noopener"{{ end }}>
+        {{- .Name }}{{ if $external }}{{ partial "icon.html" "external-link" }}<span class="visually-hidden"> (opens in a new tab)</span>{{ end -}}
+      </a>
+      {{- end }}
+    </nav>
+    <div class="header-tools">
+      {{- with site.Params.repo }}
+      <a class="icon-button" href="{{ . }}" target="_blank" rel="noopener" aria-label="Repository (opens in a new tab)">{{ partial "icon.html" "github" }}</a>
+      {{- end }}
+      <button class="icon-button theme-toggle" type="button" aria-label="Dark mode" aria-pressed="false">
+        {{- partial "icon.html" "moon" }}{{ partial "icon.html" "sun" -}}
+      </button>
+      {{- if and (not .IsHome) (not .FirstSection.IsHome) }}
+      <button class="icon-button menu-toggle" type="button" aria-label="Navigation" aria-expanded="false" aria-controls="sidebar">
+        {{- partial "icon.html" "menu" -}}
+      </button>
+      {{- end }}
+    </div>
+  </div>
+</header>
