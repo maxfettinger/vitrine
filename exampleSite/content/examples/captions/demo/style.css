@@ -1,6 +1,6 @@
 .figures {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
 }
 
@@ -10,11 +10,12 @@
 
 .figures img {
   display: block;
-  width: 100%;
-  height: auto;
+  width: auto;
+  height: 7rem;
 }
 
 .figures figcaption {
+  max-width: 11rem;
   margin-top: 0.4rem;
   font-size: 0.85rem;
 }

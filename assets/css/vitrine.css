@@ -15,6 +15,7 @@
         --text: #15171c;
         --muted: #5c636e;
         --line: #e3e6eb;
+        --line-strong: #c4c9d2;      /* the examples' dashed frame */
         --accent: #2443d6;
         --accent-strong: #1a32a6;
         --accent-soft: #eef1fd;
@@ -37,6 +38,7 @@
         --text: #e6e8ec;
         --muted: #9aa2ae;
         --line: #262b35;
+        --line-strong: #4b5365;
         --accent: #8ca2ff;
         --accent-strong: #b3c1ff;
         --accent-soft: #1b2238;
@@ -672,32 +674,43 @@
     }
 
     /* Examples: the running example in a frame, its files in tabs below */
+    /* An example: the running part in a dashed frame with a small label, its files in tabs below */
     .example {
+        position: relative;
         margin: 1.5rem 0;
-        border: 1px solid var(--line);
-        border-radius: 0.5rem;
-        overflow: hidden;
     }
 
     .example-head {
-        display: flex;
-        justify-content: space-between;
-        padding: 0.35rem 0.9rem;
-        border-bottom: 1px solid var(--line);
-        background: var(--bg-soft);
+        position: absolute;
+        top: 0.5rem;
+        left: 0.8rem;
         color: var(--muted);
-        font: 600 0.72rem / 1.6 var(--mono);
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
+        font: 0.7rem / 1 var(--mono);
+        letter-spacing: 0.04em;
     }
 
     .example-run {
-        padding: 1.25rem;
+        padding: 2rem 1rem 1rem;
+        border: 1px dashed var(--line-strong);
+        border-radius: 0.5rem;
+    }
+
+    /* Buttons in an example, so a demo's controls look like controls */
+    .example-run button {
+        padding: 0.4rem 0.8rem;
+        border: 1px solid var(--accent);
+        border-radius: 0.25rem;
+        background: var(--accent);
+        color: var(--bg);
+        font: 0.85rem / 1.2 var(--mono);
+        cursor: pointer;
     }
 
     .example .tabs {
-        margin: 0;
-        border-top: 1px solid var(--line);
+        margin: 0.75rem 0 0;
+        border: 1px solid var(--line);
+        border-radius: 0.5rem;
+        overflow: hidden;
     }
 
     .example .tabs-list {

@@ -34,7 +34,7 @@
 {{- end }}
 {{- if $frame }}<figure class="example" id="{{ $id }}">{{ end }}
   {{- if $run }}
-  {{- if $frame }}<div class="example-head"><span>Example</span><span>{{ .Get "title" | default $name }}</span></div>{{ end }}
+  {{- if $frame }}<div class="example-head">live{{ with .Get "title" }} · {{ . }}{{ end }}</div>{{ end }}
   <div class="{{ if $frame }}example-run{{ else }}example-bare{{ end }}" data-example="{{ $name }}">
     {{ replaceRE `(\s(?:src|href|poster)=")/([^/])` (printf "${1}%s${2}" site.Home.RelPermalink) $html.Content | safeHTML }}
   </div>
