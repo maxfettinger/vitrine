@@ -1,7 +1,7 @@
 name = "Vitrine"
 license = "MIT"
 licenselink = "https://github.com/maxfettinger/vitrine/blob/main/LICENSE"
-description = "A documentation theme with examples that run on the page next to their code: tabs, a two-level sidebar, On this page, llms.txt."
+description = "A Hugo theme for documentation. Its examples run live on the page, with their code in tabs below."
 homepage = "https://github.com/maxfettinger/vitrine"
 demosite = "https://vitrine.maxfettinger.com/"
 tags = ["docs", "documentation", "dark mode", "light", "minimal", "responsive", "accessible"]
