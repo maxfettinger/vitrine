@@ -52,6 +52,11 @@ hugo server
 No Go? Use a Git submodule instead; [Installation](https://vitrine.maxfettinger.com/docs/getting-started/installation/)
 explains both. Requires Hugo 0.146 or newer.
 
+## Made with Vitrine
+
+- [Vitrine's own docs](https://vitrine.maxfettinger.com/)
+- [Fieldnotes' docs](https://fieldnotes.maxfettinger.com/docs/), a Hugo theme for personal sites
+
 ## The example site
 
 `exampleSite/` is the documentation above. To run it from a clone:
