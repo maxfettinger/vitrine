@@ -41,7 +41,7 @@ enableRobotsTXT = true
 
 [params]
   description = "A Hugo theme for documentation, with examples that run on the page next to their code."
-  version = "1.0.1"
+  version = "1.0.2"
   repo = "https://github.com/maxfettinger/vitrine"
   editPath = "https://github.com/maxfettinger/vitrine/edit/main/exampleSite/content/"
   footer = "MIT licence"
