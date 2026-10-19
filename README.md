@@ -10,7 +10,7 @@ readers copy is what ran.
 [Getting started](https://vitrine.maxfettinger.com/docs/getting-started/) ·
 [Examples](https://vitrine.maxfettinger.com/examples/)
 
-![Vitrine: a photo viewer example and a random walk, each running above its code](https://raw.githubusercontent.com/maxfettinger/vitrine/main/images/showcase.png)
+![Vitrine: a photo viewer example and a random walk, each running above its code](https://raw.githubusercontent.com/maxfettinger/vitrine/main/images/screenshot.png)
 
 ## What's in it
 
