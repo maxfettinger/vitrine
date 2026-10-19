@@ -23,7 +23,7 @@
         --warn: #a15c00;
         --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
         --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
-        --gutter: clamp(1rem, 0.6rem + 1.6vw, 2rem);
+        --gutter: clamp(1.25rem, 0.9432rem + 1.3636vw, 2rem);  /* 20 → 32px */
         --layout: 88rem;             /* the header and the three columns */
         --sidebar: 15rem;
         --toc: 13rem;
@@ -149,11 +149,14 @@
         font-size: 0.86em;
     }
 
-    table {
-        display: block;
-        overflow-x: auto;
-        width: 100%;
+    /* Tables: in a box that scrolls sideways when the table is wider than the column (_markup/render-table.html) */
+    .table-scroll {
         margin-block: 1rem;
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
         border-collapse: collapse;
         font-size: 0.92rem;
     }
@@ -166,11 +169,37 @@
         vertical-align: top;
     }
 
+    :is(th, td):last-child {
+        padding-right: 0;
+    }
+
     th {
         color: var(--muted);
         font: 600 0.75rem / 1.4 var(--mono);
         letter-spacing: 0.04em;
         text-transform: uppercase;
+    }
+
+    /* Code in a cell stays whole on wide screens; on narrow ones it may break anywhere, as a long name would
+       otherwise widen its column and squeeze the others to a word's width */
+    td code {
+        overflow-wrap: break-word;
+    }
+
+    @media (max-width: 40rem) {
+        td code {
+            overflow-wrap: anywhere;
+        }
+    }
+
+    /* Maths (head/math.html): an in-line formula too wide for the column even after MathJax's line breaks scrolls
+       sideways in its own box, as display maths does */
+    mjx-container[data-overflow] {
+        display: inline-block;
+        max-width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        vertical-align: middle;
     }
 
     blockquote {
@@ -673,7 +702,6 @@
         margin-top: 1rem;
     }
 
-    /* Examples: the running example in a frame, its files in tabs below */
     /* An example: the running part in a dashed frame with a small label, its files in tabs below */
     .example {
         position: relative;
@@ -866,6 +894,21 @@
         padding-block: 4rem;
         text-align: center;
     }
+
+    /* A section's list of its pages */
+    .section-list {
+        padding-left: 1.1rem;
+    }
+
+    .section-list li {
+        margin-block: 0.4rem;
+        color: var(--muted);
+    }
+
+    /* An example run bare (frame="false"): its markup takes no room of its own */
+    .example-bare {
+        display: contents;
+    }
 }
 
 /* Syntax colours: tags and selectors blue, attributes and keywords purple, values green, comments grey; at least
@@ -910,24 +953,5 @@
 
     :root[data-theme="dark"] .chroma :is(.o, .p) {
         color: #b4bac4;
-    }
-}
-
-/* A section's list of its pages */
-@layer components {
-    .section-list {
-        padding-left: 1.1rem;
-    }
-
-    .section-list li {
-        margin-block: 0.4rem;
-        color: var(--muted);
-    }
-}
-
-/* An example run bare (frame="false"): its markup takes no room of its own */
-@layer components {
-    .example-bare {
-        display: contents;
     }
 }

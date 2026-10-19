@@ -28,9 +28,14 @@
 {{- range site.Params.stylesheets }}
 <link rel="stylesheet" href="{{ cond (strings.HasPrefix . "/") (strings.TrimPrefix "/" . | relURL) . }}">
 {{- end }}
-{{- with resources.Get "css/vitrine.css" | minify | fingerprint }}
+{{- /* The theme's CSS and the site's assets/css/custom.css (empty in the theme) in one file, the site's last */}}
+{{- with slice (resources.Get "css/vitrine.css") (resources.Get "css/custom.css") | resources.Concat "css/vitrine.css" | minify | fingerprint }}
 <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous">
 {{- end }}
 {{- with resources.Get "js/vitrine.js" | js.Build (dict "minify" true) | fingerprint }}
 <script type="module" src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous"></script>
 {{- end }}
+{{- if .Param "math" }}
+{{ partialCached "head/math.html" . }}
+{{- end }}
+{{ partial "hooks/head-end.html" . }}

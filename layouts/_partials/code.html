@@ -1,9 +1,10 @@
 {{- /* A code block with its file name or language above it and a copy button.
-       Context: dict with code (text), lang (for highlighting) and file (the label; the language if empty). */ -}}
+       Context: dict with code (text), lang (for highlighting), file (the label; the language if empty) and options
+       (optional: Hugo's highlighting options, such as hl_lines or linenos, from the code fence's attributes). */ -}}
 <figure class="code">
   <figcaption class="code-head">
     <span>{{ .file | default .lang }}</span>
     <button type="button" class="code-copy" aria-label="Copy the code">{{ partial "icon.html" "copy" }}<span>Copy</span></button>
   </figcaption>
-  {{ transform.Highlight (strings.TrimSpace .code) .lang }}
+  {{ transform.Highlight (strings.TrimSpace .code) .lang (.options | default dict) }}
 </figure>

@@ -1,0 +1,5 @@
+/*
+ * Your own CSS: put a file with this name in your site's assets/css/ to replace this empty one. It's added after the
+ * theme's CSS outside any cascade layer, so your rules win over the theme's whatever their selectors. The colours and
+ * sizes are custom properties (vitrine.css, the first block), for example :root { --accent: #0b6e4f; }.
+ */
