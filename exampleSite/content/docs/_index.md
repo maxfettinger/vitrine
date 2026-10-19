@@ -1,12 +1,12 @@
 ---
 title: Docs
-lead: Everything the library reads and writes.
+lead: How to build documentation with Vitrine, from installing it to examples that run on the page.
 weight: 10
 ---
 
-The library finds the parts of your page by their `data-dlb-*` attributes, adds the behaviour, and reports its state
-as attributes your CSS can use. It ships no look of its own: `dialog-lightbox.css` only does layout, in the cascade
-layer `dialog-lightbox`, so your styles win without fighting specificity.
+Vitrine is a theme for [Hugo](https://gohugo.io/), the static site generator. You write pages in Markdown, Hugo turns
+them into a website, and Vitrine decides how that website looks and works: the tabs, the sidebar, code blocks, live
+examples and the rest.
 
-Start with [Getting started](getting-started/), then the guide's chapters; the reference lists every attribute and
-event.
+These docs are built with Vitrine itself. If you're new, start with [Getting started](getting-started/). The
+[reference](reference/) lists every setting, front matter key and shortcode in one place.

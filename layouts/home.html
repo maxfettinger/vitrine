@@ -12,7 +12,7 @@
   {{- with .Params.install }}{{ partial "code.html" (dict "code" . "lang" "sh" "file" "terminal") }}{{ end }}
   {{- with .Params.actions }}
   <p class="actions">
-    {{- range . }}<a href="{{ cond (strings.HasPrefix .url "http") .url (relURL .url) }}">{{ .label }}</a>{{ end }}
+    {{- range . }}<a href="{{ cond (strings.HasPrefix .url "http") .url (strings.TrimPrefix "/" .url | relURL) }}">{{ .label }}</a>{{ end }}
   </p>
   {{- end }}
 </section>

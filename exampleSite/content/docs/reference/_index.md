@@ -1,7 +1,7 @@
 ---
-title: "Reference"
-weight: 3
-lead: "Gestures, keys and the details."
+title: Reference
+lead: Every setting, front matter key and shortcode in one place.
+weight: 4
 ---
 
-The tables to look things up in.
+Look things up here; the chapters before explain them with examples.

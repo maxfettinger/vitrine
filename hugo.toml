@@ -10,9 +10,15 @@
   repo = ""            # the repository: an icon in the header
   editPath = ""        # e.g. "https://github.com/me/lib/edit/main/docs/content/": "Edit this page" under each page
   stylesheets = []     # extra stylesheets in every page's head, e.g. the library's own CSS from a CDN
-  favicon = "favicon.svg"  # a file in static/ (the theme has a default)
   footer = ""          # a line before "Built with", Markdown
   llms = true          # llms.txt, llms-full.txt and a Markdown copy (index.md) of every page, for AI assistants
+  math = false         # MathJax on every page; a page can set math: true or false itself
+
+  # Favicon: files in your site's static/ folder (the theme has all three)
+  [params.favicon]
+    svg = "favicon.svg"
+    ico = "favicon.ico"
+    appleTouch = "apple-touch-icon.png"
 
   # Light and dark: "light", "dark" or "auto" (the visitor's system) until the visitor uses the switch
   [params.mode]

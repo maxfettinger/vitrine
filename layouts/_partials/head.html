@@ -6,7 +6,19 @@
 {{- if and site.Params.llms (in (slice "home" "section" "page") .Kind) }}
 <link rel="alternate" type="text/markdown" href="{{ .RelPermalink }}index.md" title="{{ .Title }} (Markdown)">
 {{- end }}
-{{- with site.Params.favicon }}<link rel="icon" href="{{ . | relURL }}">{{ end }}
+{{- /* Favicon (params.favicon): files in static/, the theme's by default. sizes="32x32" keeps Chrome from preferring the
+       ICO over the SVG; the PNG is for iPhone home screens. */}}
+{{- with site.Params.favicon }}
+  {{- with .ico }}
+<link rel="icon" href="{{ strings.TrimPrefix "/" . | relURL }}" sizes="32x32">
+  {{- end }}
+  {{- with .svg }}
+<link rel="icon" href="{{ strings.TrimPrefix "/" . | relURL }}" type="image/svg+xml">
+  {{- end }}
+  {{- with .appleTouch }}
+<link rel="apple-touch-icon" href="{{ strings.TrimPrefix "/" . | relURL }}">
+  {{- end }}
+{{- end }}
 {{ partial "opengraph.html" . }}
 {{ partial "twitter_cards.html" . }}
 {{- /* Light or dark before the first paint: the visitor's choice from the switch, else params.mode.default ("auto":
