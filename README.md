@@ -10,14 +10,13 @@ readers copy is what ran.
 [Getting started](https://vitrine.maxfettinger.com/docs/getting-started/) ·
 [Examples](https://vitrine.maxfettinger.com/examples/)
 
-![Vitrine in light and dark mode: a photo viewer example and a random walk, each running above its code](images/screenshot.png)
+![Vitrine: a photo viewer example and a random walk, each running above its code](images/screenshot.png)
 
 ## What's in it
 
 - **Live examples** with scoped CSS (`@scope`), module scripts and an import map, so example code imports
   `"your-lib"` exactly as it reads after `npm install`.
-- **Navigation that stays put**: tabs across the top, a two-level sidebar, "On this page", previous and next.
-- **Light and dark**, following the reader's system until they choose.
+- **Navigation**: tabs across the top, a two-level sidebar, "On this page", previous and next.
 - **llms.txt**, `llms-full.txt` and a Markdown copy of every page, for AI assistants, with no setup.
 - Tabs with remembered groups, callouts, copy buttons, MathJax, an edit link.
 - Plain CSS and one small script. No framework, no Node build.

@@ -13,9 +13,8 @@ switch, and on phones a menu button. Below it, a page in a section has three col
 - the **text** in the middle, at most 46rem wide (about 80 characters a line);
 - **On this page** on the right: the page's `##` and `###` headings, the one you're reading marked as you scroll.
 
-Pages outside a section (the start page, a top-level page like `content/about.md`, and the 404 page) use the same
-frame without the side columns, so the header and the text don't move between kinds of pages. The page also always
-keeps room for the scrollbar, which would otherwise shift everything by its width between short and long pages.
+Pages outside a section (the start page, a top-level page like `content/about.md`, and the 404 page) have no side
+columns.
 
 On medium screens "On this page" is left out. On phones the sidebar opens over the page from the menu button and
 closes with a link, Escape or the button.

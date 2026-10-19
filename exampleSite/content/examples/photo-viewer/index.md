@@ -15,5 +15,3 @@ Click a photo, then swipe or use the arrow keys; Escape or the back button close
 for the whole page: [The dialog](/examples/dialog/) shows its markup and style. It runs bare here, without a frame:
 
 {{< example name="dialog" frame="false" >}}
-
-The photos are gradients made with ffmpeg, so they carry no copyright.

@@ -1,11 +1,11 @@
 name = "Vitrine"
 license = "MIT"
 licenselink = "https://github.com/maxfettinger/vitrine/blob/main/LICENSE"
-description = "A documentation theme with examples that run on the page next to their code: tabs, a two-level sidebar, On this page, light and dark, llms.txt."
+description = "A documentation theme with examples that run on the page next to their code: tabs, a two-level sidebar, On this page, llms.txt."
 homepage = "https://github.com/maxfettinger/vitrine"
 demosite = "https://vitrine.maxfettinger.com/"
 tags = ["docs", "documentation", "dark mode", "light", "minimal", "responsive", "accessible"]
-features = ["live examples with their code", "import maps: examples import libraries by their npm name", "tabs with remembered groups", "two-level sidebar", "On this page", "light and dark", "llms.txt and Markdown copies of every page", "MathJax", "copy buttons", "no JavaScript framework"]
+features = ["live examples with their code", "import maps: examples import libraries by their npm name", "tabs with remembered groups", "two-level sidebar", "On this page", "llms.txt and Markdown copies of every page", "MathJax", "copy buttons", "no JavaScript framework"]
 min_version = "0.146.0"
 
 [author]

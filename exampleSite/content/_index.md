@@ -1,8 +1,8 @@
 ---
 title: Vitrine
-description: "Vitrine is a Hugo theme for documentation: tabs, a two-level sidebar, light and dark, llms.txt, and examples that run on the page next to their code."
+description: "Vitrine is a Hugo theme for documentation: tabs, a two-level sidebar, llms.txt, and examples that run on the page next to their code."
 lead: A Hugo theme for documentation, with examples that run on the page next to their code.
-facts: ["Hugo 0.146 or newer", "No JavaScript framework", "Light and dark", "llms.txt", "MIT licence"]
+facts: ["Hugo 0.146 or newer", "No JavaScript framework", "llms.txt", "MIT licence"]
 install: hugo mod get github.com/maxfettinger/vitrine
 actions:
   - { label: Get started, url: docs/getting-started/ }
@@ -23,12 +23,8 @@ second copy of the code to keep in sync.
 with its files in tabs below it. Its CSS is scoped to the example, its script runs as a module, and an import map
 lets the script import a library by its npm name. See [Live examples](/docs/examples/).
 
-**Navigation that stays put.** Tabs across the top for the site's sections, a two-level sidebar for the section you're
-in, "On this page" on the right, previous and next at the bottom. The header doesn't move between pages with and
-without sidebars. See [Pages and navigation](/docs/writing/pages-and-navigation/).
-
-**Light and dark.** The reader's system setting until they pick one with the switch. Text and code colours pass
-WCAG AA (4.5:1) in both.
+**Navigation.** Tabs across the top for the site's sections, a two-level sidebar for the section you're in, "On this
+page" on the right, previous and next at the bottom. See [Pages and navigation](/docs/writing/pages-and-navigation/).
 
 **Docs for AI assistants.** `llms.txt`, `llms-full.txt` and a Markdown copy of every page, with no setup. See
 [llms.txt](/docs/reference/llms-txt/).
