@@ -1,0 +1,50 @@
+{{- /* Files for AI assistants and other tools that read docs as text (params.llms, on by default), published from the
+       start page with resources.FromString, so the site needs no output format settings:
+       - <page>/index.md for every page: its title, lead and Markdown source (shortcodes stay as written)
+       - llms.txt (https://llmstxt.org): the site's name and description, then a list per section of its pages'
+         Markdown versions with their leads, in the sidebar's order
+       - llms-full.txt: every page's Markdown in one file, in the same order
+       Context: the start page. */ -}}
+{{- if site.Params.llms }}
+  {{- /* The pages in reading order: the start page, each section as the sidebar lists it, then pages outside sections */}}
+  {{- $groups := slice }}
+  {{- range site.Sections.ByWeight }}
+    {{- $groups = $groups | append (dict "title" .LinkTitle "pages" (partial "order.html" .)) }}
+  {{- end }}
+  {{- with where site.RegularPages "Section" "" }}
+    {{- $groups = $groups | append (dict "title" "Other pages" "pages" .) }}
+  {{- end }}
+
+  {{- $base := site.Home.RelPermalink }}
+  {{- $markdown := dict }}
+  {{- $pages := slice site.Home }}
+  {{- range $groups }}{{ $pages = $pages | append .pages }}{{ end }}
+  {{- range $pages }}
+    {{- if .RelPermalink }}
+      {{- $text := printf "# %s\n\n" .Title }}
+      {{- with .Params.lead }}{{ $text = printf "%s> %s\n\n" $text . }}{{ end }}
+      {{- $text = printf "%s%s\n" $text (strings.TrimSpace .RawContent) }}
+      {{- $path := path.Join (strings.TrimPrefix $base .RelPermalink) "index.md" }}
+      {{- (resources.FromString $path $text).Publish }}
+      {{- $markdown = merge $markdown (dict .RelPermalink $text) }}
+    {{- end }}
+  {{- end }}
+
+  {{- $index := printf "# %s\n" site.Title }}
+  {{- with site.Params.description }}{{ $index = printf "%s\n> %s\n" $index . }}{{ end }}
+  {{- with site.Home.Params.lead }}{{ $index = printf "%s\n%s\n" $index . }}{{ end }}
+  {{- $full := index $markdown site.Home.RelPermalink | default "" }}
+  {{- range $groups }}
+    {{- $index = printf "%s\n## %s\n\n" $index .title }}
+    {{- range .pages }}
+      {{- if .RelPermalink }}
+        {{- $index = printf "%s- [%s](%sindex.md)" $index .LinkTitle .Permalink }}
+        {{- with .Params.lead | default .Description }}{{ $index = printf "%s: %s" $index . }}{{ end }}
+        {{- $index = printf "%s\n" $index }}
+        {{- $full = printf "%s\n---\n\n%s" $full (index $markdown .RelPermalink) }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+  {{- (resources.FromString "llms.txt" $index).Publish }}
+  {{- (resources.FromString "llms-full.txt" $full).Publish }}
+{{- end }}

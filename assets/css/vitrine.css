@@ -23,7 +23,7 @@
         --warn: #a15c00;
         --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
         --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
-        --gutter: clamp(1.25rem, 0.9432rem + 1.3636vw, 2rem);  /* 20 → 32px */
+        --gutter: clamp(1rem, 0.6rem + 1.6vw, 2rem);
         --layout: 88rem;             /* the header and the three columns */
         --sidebar: 15rem;
         --toc: 13rem;
@@ -624,28 +624,45 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0.3rem 0.4rem 0.3rem 0.9rem;
+        padding: 0.15rem 0.3rem 0.15rem 0.9rem;
         border-bottom: 1px solid var(--line);
         background: var(--bg);
         color: var(--muted);
         font: 0.78rem / 1.6 var(--mono);
     }
 
+    /* The copy button: an icon, a check for a moment after copying (assets/js/vitrine.js) */
     .code-copy {
-        display: flex;
-        align-items: center;
-        gap: 0.3rem;
-        padding: 0.15rem 0.55rem;
-        border: 1px solid var(--line);
-        border-radius: 0.25rem;
-        background: var(--bg);
+        display: grid;
+        place-items: center;
+        width: 1.9rem;
+        height: 1.9rem;
+        padding: 0;
+        border: 0;
+        border-radius: 0.3rem;
+        background: none;
         color: var(--muted);
-        font: inherit;
     }
 
     .code-copy:hover {
-        border-color: var(--muted);
+        background: var(--bg-soft);
         color: var(--text);
+    }
+
+    .code-copy .icon {
+        grid-area: 1 / 1;
+        width: 0.95rem;
+        height: 0.95rem;
+    }
+
+    .code-copy .icon-check,
+    .code-copy[data-copied] .icon-copy {
+        visibility: hidden;
+    }
+
+    .code-copy[data-copied] .icon-check {
+        visibility: visible;
+        color: var(--accent);
     }
 
     .code pre {
@@ -734,7 +751,9 @@
         cursor: pointer;
     }
 
-    .example .tabs {
+    /* The files: tabs in a frame, one copy button at the end of the tab row for the file shown (assets/js/vitrine.js) */
+    .example > .tabs {
+        position: relative;
         margin: 0.75rem 0 0;
         border: 1px solid var(--line);
         border-radius: 0.5rem;
@@ -742,8 +761,18 @@
     }
 
     .example .tabs-list {
-        padding-inline: 0.5rem;
+        padding: 0 2.75rem 0 0.5rem;
         background: var(--bg-soft);
+    }
+
+    .example .tabs > .code-copy {
+        position: absolute;
+        top: 0.2rem;
+        right: 0.4rem;
+    }
+
+    .example .tabs > .code-copy:hover {
+        background: var(--bg);
     }
 
     .example .code {
@@ -754,17 +783,6 @@
 
     .example .code-head {
         display: none;
-    }
-
-    .example .tabs-panel {
-        position: relative;
-    }
-
-    .example .tabs-panel .code-copy {
-        position: absolute;
-        z-index: 1;
-        top: 0.5rem;
-        right: 0.5rem;
     }
 
     /* Callouts: a note or a warning beside the text */

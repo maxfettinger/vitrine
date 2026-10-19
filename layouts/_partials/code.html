@@ -4,7 +4,7 @@
 <figure class="code">
   <figcaption class="code-head">
     <span>{{ .file | default .lang }}</span>
-    <button type="button" class="code-copy" aria-label="Copy the code">{{ partial "icon.html" "copy" }}<span>Copy</span></button>
+    <button type="button" class="code-copy" aria-label="Copy code" title="Copy code">{{ partial "icon.html" "copy" }}{{ partial "icon.html" "check" }}</button>
   </figcaption>
   {{ transform.Highlight (strings.TrimSpace .code) .lang (.options | default dict) }}
 </figure>

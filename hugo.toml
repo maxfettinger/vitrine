@@ -12,6 +12,7 @@
   stylesheets = []     # extra stylesheets in every page's head, e.g. the library's own CSS from a CDN
   favicon = "favicon.svg"  # a file in static/ (the theme has a default)
   footer = ""          # a line before "Built with", Markdown
+  llms = true          # llms.txt, llms-full.txt and a Markdown copy (index.md) of every page, for AI assistants
 
   # Light and dark: "light", "dark" or "auto" (the visitor's system) until the visitor uses the switch
   [params.mode]

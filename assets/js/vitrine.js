@@ -16,20 +16,36 @@ if (toggle) {
   });
 }
 
-// Copy buttons: the code of their block
-for (const button of document.querySelectorAll(".code-copy")) {
-  const label = button.querySelector("span");
-  const pre = button.closest(".code").querySelector("pre"); // now: examples move the button out of the block below
+// Copy buttons: an icon in the code block's head that copies its code, then shows a check for a moment (and says
+// "Copied" to screen readers). An example's files share one button at the end of their tab row, copying the file shown.
+const status = Object.assign(document.createElement("p"), { className: "visually-hidden" });
+status.setAttribute("aria-live", "polite");
+document.body.append(status);
+
+function copyButton(button, code) {
   button.addEventListener("click", async () => {
-    await navigator.clipboard.writeText(pre.textContent);
-    label.textContent = "Copied";
-    setTimeout(() => (label.textContent = "Copy"), 1500);
+    try {
+      await navigator.clipboard.writeText(code().textContent);
+      button.dataset.copied = "";
+      status.textContent = "Copied";
+    } catch {
+      status.textContent = "Couldn't copy: select the code and copy it";
+    }
+    setTimeout(() => {
+      delete button.dataset.copied;
+      status.textContent = "";
+    }, 1500);
   });
 }
-// In an example the copy button sits on the panel, over the code
-for (const panel of document.querySelectorAll(".example .tabs-panel")) {
-  const button = panel.querySelector(".code-copy");
-  if (button) panel.prepend(button);
+
+for (const tabs of document.querySelectorAll(".example .tabs")) {
+  const button = tabs.querySelector(".code-copy")?.cloneNode(true);
+  if (!button) continue;
+  tabs.append(button);
+  copyButton(button, () => tabs.querySelector(":scope > [role=tabpanel]:not([hidden]) pre"));
+}
+for (const button of document.querySelectorAll(".code .code-copy")) {
+  if (!button.closest(".example")) copyButton(button, () => button.closest(".code").querySelector("pre"));
 }
 
 // Tabs: click or arrow keys; tabs in a group switch together, and the group's choice is remembered

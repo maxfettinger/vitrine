@@ -20,5 +20,6 @@
   </div>
   {{ partial "footer.html" . }}
   {{ partial "hooks/body-end.html" . }}
+  {{- if .IsHome }}{{ partial "llms.html" . }}{{ end }}
 </body>
 </html>

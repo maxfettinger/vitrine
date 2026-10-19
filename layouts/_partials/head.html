@@ -3,6 +3,9 @@
 <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} · {{ site.Title }}{{ end }}</title>
 <meta name="description" content="{{ .Description | default .Params.lead | default site.Params.description | plainify }}">
 <link rel="canonical" href="{{ .Permalink }}">
+{{- if and site.Params.llms (in (slice "home" "section" "page") .Kind) }}
+<link rel="alternate" type="text/markdown" href="{{ .RelPermalink }}index.md" title="{{ .Title }} (Markdown)">
+{{- end }}
 {{- with site.Params.favicon }}<link rel="icon" href="{{ . | relURL }}">{{ end }}
 {{ partial "opengraph.html" . }}
 {{ partial "twitter_cards.html" . }}
